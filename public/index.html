@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>看看我QAQ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'MiSans';
+            src: url('https://cdn.jsdelivr.net/npm/@mifans/mi-fonts@0.1.0/dist/MiSans/MiSans-Normal.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'MiSans';
+            src: url('https://cdn.jsdelivr.net/npm/@mifans/mi-fonts@0.1.0/dist/MiSans/MiSans-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'MiSans';
+            src: url('https://cdn.jsdelivr.net/npm/@mifans/mi-fonts@0.1.0/dist/MiSans/MiSans-Demibold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'MiSans', 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-weight: 600;
+        }
+        
+        body {
+            background: #0a0e17;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* 视频背景容器 */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            perspective: 1000px; /* 添加透视效果 */
+        }
+        
+        .video-container {
+            position: absolute;
+            width: 120%; /* 比视口更大一些 */
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: transform;
+        }
+        
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+        
+        /* 深色遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.164);
+            z-index: -1;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            z-index: 10;
+            padding: 15px;
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 
+                        inset 0 0 15px rgba(255, 255, 255, 0.05);
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            position: relative;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: card-appear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        @keyframes card-appear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .status-title {
+            font-size: 1.1rem;
+            color: #a0aec0;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            padding-top: 10px;
+        }
+        
+        .app-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 15px 0;
+            word-break: break-word;
+            line-height: 1.3;
+            transition: all 0.3s ease;
+            padding: 15px 10px;
+            border-radius: 12px;
+            background: rgba(67, 97, 238, 0.15);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(67, 97, 238, 0.3);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .app-name.changed {
+            animation: highlight 1s ease;
+        }
+        
+        @keyframes highlight {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); color: #6c8eff; }
+            100% { transform: scale(1); }
+        }
+        
+        .update-info {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .last-updated {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: #cbd5e0;
+            display: inline-block;
+            margin-top: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 在线状态指示器 */
+        .online-status {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background: rgba(46, 125, 50, 0.25);
+            color: #a7f1a8;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            border: 1px solid rgba(167, 241, 168, 0.3);
+            margin: 0 auto 15px;
+            width: fit-content;
+        }
+        
+        .online-status.offline {
+            background: rgba(198, 40, 40, 0.25);
+            color: #ff9e9e;
+            border: 1px solid rgba(255, 158, 158, 0.3);
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        
+        .online-status.offline .status-dot {
+            background: #f44336;
+        }
+        
+        /* 观察提示 */
+        .observation-note {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            padding: 12px 18px;
+            border-radius: 15px;
+            background: rgba(67, 97, 238, 0.2);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1.2s ease-out;
+            max-width: 100%;
+            margin: 0 auto 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .observation-note i {
+            margin-right: 10px;
+            color: #ffd166;
+            font-size: 1.2rem;
+        }
+        
+        /* 按钮容器 */
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            animation: floatUp 1s ease-out;
+        }
+        
+        /* 按钮通用样式 */
+        .custom-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        
+        /* GitHub 按钮样式 */
+        .github-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .github-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            color: #ffffff;
+            border: 1px solid rgba(110, 84, 148, 0.5);
+        }
+        
+        /* B站按钮样式 */
+        .bilibili-btn {
+            background: rgba(0, 161, 214, 0.2); /* B站主题色 */
+            border: 1px solid rgba(0, 161, 214, 0.3);
+        }
+        
+        .bilibili-btn:hover {
+            background: rgba(0, 161, 214, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            color: #ffffff;
+            border: 1px solid rgba(0, 161, 214, 0.5);
+        }
+        
+        .custom-btn i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .custom-btn:hover i {
+            transform: scale(1.15);
+        }
+        
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 标题样式 */
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #fff;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #4361ee;
+            border-radius: 2px;
+        }
+        
+        /* 布局容器 */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .status-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* 装饰元素 */
+        .decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(67, 97, 238, 0.05);
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 50px) rotate(90deg); }
+            50% { transform: translate(100px, 0) rotate(180deg); }
+            75% { transform: translate(50px, -50px) rotate(270deg); }
+        }
+        
+        /* 状态指示器动画 */
+        .status-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        /* 响应式设计 */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .status-card {
+                padding: 40px 30px;
+                margin-bottom: 25px;
+            }
+            
+            .status-title {
+                font-size: 1.3rem;
+                margin-bottom: 20px;
+            }
+            
+            .app-name {
+                font-size: 2.5rem;
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .update-info {
+                font-size: 1rem;
+                margin-top: 20px;
+                gap: 10px;
+            }
+            
+            .last-updated {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+                margin-top: 15px;
+                margin-bottom: 25px;
+            }
+            
+            .online-status {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                margin: 0;
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+            
+            .observation-note {
+                font-size: 1.2rem;
+                padding: 15px 25px;
+                margin-bottom: 35px;
+            }
+            
+            .custom-btn {
+                padding: 14px 30px;
+                font-size: 1.1rem;
+                max-width: 220px;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+                margin-bottom: 40px;
+                padding-bottom: 15px;
+            }
+            
+            .page-title::after {
+                width: 80px;
+                bottom: -10px;
+            }
+            
+            .content-wrapper {
+                gap: 20px;
+            }
+            
+            .buttons-container {
+                gap: 20px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .app-name {
+                font-size: 2.8rem;
+            }
+            
+            .buttons-container {
+                gap: 30px;
+            }
+        }
+        
+        /* 移动端特定优化 */
+        @media (max-width: 480px) {
+            .app-name {
+                font-size: 1.6rem;
+                min-height: 70px;
+                padding: 10px 5px;
+            }
+            
+            .observation-note {
+                font-size: 0.95rem;
+                padding: 10px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            
+            .custom-btn {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+            }
+        }
+        
+        /* 视频加载提示 */
+        .video-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0a0e17;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+        
+        .video-loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #4361ee;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 鼠标移动提示 */
+        .mouse-move-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            animation: fadeInOut 4s ease-in-out forwards;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 视频加载提示 -->
+    <div class="video-loading" id="videoLoading">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- 鼠标移动提示 -->
+    <div class="mouse-move-hint" id="mouseHint">
+        <i class="fas fa-mouse-pointer"></i>
+        <span>移动鼠标可改变壁纸位置</span>
+    </div>
+    
+    <!-- 视频背景 -->
+    <div class="video-background">
+        <div class="video-container" id="videoContainer">
+            <video id="bgVideo" autoplay loop muted playsinline>
+                <source src="http://sz0x2m414.hd-bkt.clouddn.com/wallpaper%E6%9C%89%E8%80%B3%E6%9C%B5%E6%8A%96%E5%8A%A8.mp4" type="video/mp4">
+                <!-- 备用视频源 -->
+                <source src="wallpaper有耳朵抖动.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    
+    <!-- 深色遮罩层 -->
+    <div class="overlay"></div>
+    
+    <!-- 背景装饰元素 -->
+    <div class="decoration">
+        <div class="bubble" style="width: 100px; height: 100px; top: 10%; left: 5%; animation-delay: 0s;"></div>
+        <div class="bubble" style="width: 140px; height: 140px; top: 40%; left: 80%; animation-delay: -4s;"></div>
+        <div class="bubble" style="width: 80px; height: 80px; top: 70%; left: 20%; animation-delay: -8s;"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 页面标题 -->
+        <h1 class="page-title">来看看我(O_o)(o_O)</h1>
+        
+        <div class="content-wrapper">
+            <!-- 观察提示 -->
+            <div class="observation-note">
+                <i class="fas fa-binoculars"></i>你可以通过这个网页来视奸anyan
+            </div>
+            
+            <div class="status-section">
+                <!-- 在线状态指示器 -->
+                <div class="online-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span id="statusText">在线</span>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-title">当前正在使用</div>
+                    <div class="app-name" id="currentApp">等待更新中...</div>
+                    <div class="update-info">
+                        <i class="fas fa-sync-alt fa-spin"></i>
+                        <span>实时更新中</span>
+                    </div>
+                </div>
+                
+                <div class="last-updated">
+                    最后更新时间: <span id="updateTime">--:--:--</span>
+                </div>
+            </div>
+            
+            <!-- 按钮容器 -->
+            <div class="buttons-container">
+                <!-- GitHub 按钮 -->
+                <a href="https://github.com/yourusername/your-repo" class="custom-btn github-btn" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub 项目</span>
+                </a>
+                
+                <!-- B站按钮 -->
+                <a href="https://space.bilibili.com/3493142466660408?spm_id_from=333.788.0.0" class="custom-btn bilibili-btn" target="_blank">
+                    <i class="fab fa-bilibili"></i>
+                    <span>访问 BiliBili</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置
+        const API_URL = '/api/current-status';
+        const UPDATE_INTERVAL = 3000; // 3秒更新一次
+        
+        // 获取当前应用
+        async function getCurrentApp() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('获取数据失败');
+                const data = await response.json();
+                
+                // 获取最新应用（按时间排序取第一条）
+                if (data && data.length > 0) {
+                    // 按时间排序
+                    const sortedData = data.sort((a, b) => 
+                        new Date(b.access_time) - new Date(a.access_time)
+                    );
+                    
+                    return {
+                        app: sortedData[0].window_title || '未知应用',
+                        time: sortedData[0].access_time,
+                        status: true // 表示成功获取到应用
+                    };
+                }
+                return {
+                    status: false // 表示未获取到应用
+                };
+            } catch (error) {
+                console.error('获取数据时出错:', error);
+                return {
+                    status: false // 表示未获取到应用
+                };
+            }
+        }
+        
+        // 更新时间显示（使用API返回的时间）
+        function updateTimeDisplay(apiTime) {
+            if (apiTime) {
+                // 将API返回的时间字符串转换为Date对象
+                const date = new Date(apiTime);
+                // 格式化为HH:MM:SS
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                const timeStr = `${hours}:${minutes}:${seconds}`;
+                document.getElementById('updateTime').textContent = timeStr;
+            } else {
+                // 如果没有API时间，使用当前时间
+                const now = new Date();
+                const timeStr = now.toTimeString().split(' ')[0];
+                document.getElementById('updateTime').textContent = timeStr;
+            }
+        }
+        
+        // 更新应用状态显示
+        function updateAppStatus(hasApp) {
+            const statusElement = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('statusText');
+            
+            if (hasApp) {
+                statusElement.classList.remove('offline');
+                statusText.textContent = 'anyan还活着QAQ';
+            } else {
+                statusElement.classList.add('offline');
+                statusText.textContent = '死了X-X';
+            }
+        }
+        
+        // 更新UI
+        let lastApp = '';
+        async function updateDisplay() {
+            const result = await getCurrentApp();
+            const appElement = document.getElementById('currentApp');
+            
+            if (result.status && result.app) {
+                // 检测应用是否变化
+                if (result.app !== lastApp) {
+                    appElement.textContent = result.app;
+                    appElement.classList.add('changed');
+                    setTimeout(() => appElement.classList.remove('changed'), 1000);
+                    lastApp = result.app;
+                }
+                
+                // 使用API返回的时间更新显示
+                updateTimeDisplay(result.time);
+                updateAppStatus(true);
+            } else {
+                appElement.textContent = '未检测到应用';
+                // 使用当前时间作为回退
+                updateTimeDisplay(null);
+                updateAppStatus(false);
+                lastApp = '';
+            }
+        }
+        
+        // 更新在线状态显示
+        function updateOnlineStatus() {
+            const statusElement = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('statusText');
+            
+            if (navigator.onLine) {
+                // 只有在有应用时才显示"anyan还活着QAQ"
+                if (statusText.textContent !== '死了X-X') {
+                    statusElement.classList.remove('offline');
+                    statusText.textContent = 'anyan还活着QAQ';
+                }
+            } else {
+                statusElement.classList.add('offline');
+                statusText.textContent = '死了X-X';
+            }
+        }
+        
+        // 视频加载处理
+        function handleVideoLoad() {
+            const video = document.getElementById('bgVideo');
+            const loadingScreen = document.getElementById('videoLoading');
+            
+            // 检查视频是否已加载足够数据
+            if (video.readyState >= 3) { // HAVE_FUTURE_DATA
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            } else {
+                video.oncanplay = function() {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                };
+            }
+            
+            // 处理视频加载错误
+            video.onerror = function() {
+                console.log('视频加载失败，使用备用背景');
+                loadingScreen.style.display = 'none';
+                document.body.style.backgroundImage = 'linear-gradient(rgba(0, 0, 0, 0.8), url("https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80")';
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            };
+        }
+        
+        // 壁纸跟随鼠标移动效果
+        function setupParallaxEffect() {
+            const videoContainer = document.getElementById('videoContainer');
+            let mouseX = 0.5;
+            let mouseY = 0.5;
+            
+            // 更新视频位置
+            function updateVideoPosition() {
+                // 计算偏移量（-5% 到 5%）
+                const offsetX = (mouseX - 0.5) * 10;
+                const offsetY = (mouseY - 0.5) * 10;
+                
+                // 应用平滑的视差效果
+                videoContainer.style.transform = `translate(${offsetX}%, ${offsetY}%)`;
+                
+                // 继续更新
+                requestAnimationFrame(updateVideoPosition);
+            }
+            
+            // 监听鼠标移动
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX / window.innerWidth;
+                mouseY = e.clientY / window.innerHeight;
+            });
+            
+            // 初始化更新循环
+            updateVideoPosition();
+        }
+        
+        // 初始化
+        async function init() {
+            // 处理视频加载
+            handleVideoLoad();
+            
+            // 首次加载
+            await updateDisplay();
+            
+            // 设置在线状态检测
+            updateOnlineStatus();
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            // 设置定时更新
+            setInterval(updateDisplay, UPDATE_INTERVAL);
+            
+            // 设置壁纸跟随鼠标效果
+            setupParallaxEffect();
+            
+            // 隐藏鼠标提示
+            setTimeout(() => {
+                document.getElementById('mouseHint').style.display = 'none';
+            }, 4000);
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
