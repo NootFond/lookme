@@ -32,7 +32,7 @@ app.post('/api/app-usage', (req, res) => {
 app.get('/api/current-status', (req, res) => {
     // 更新设备状态（超过30秒无更新视为离线）
     Object.keys(devices).forEach(deviceId => {
-        if (Date.now() - devices[deviceId].last_update > 30000) {
+        if (Date.now() - devices[deviceId].last_update > 3000) {
             devices[deviceId].status = 'offline';
         }
     });
