@@ -615,7 +615,7 @@
         <div class="content-wrapper">
             <!-- 观察提示 -->
             <div class="observation-note">
-                <i class="fas fa-binoculars"></i>你可以通过这个网页来视奸anyan
+                <i class="fas fa-binoculars"></i>你可以通过这个网页来视奸NootFond
             </div>
             
             <div class="status-section">
@@ -644,13 +644,13 @@
                 <!-- GitHub 按钮 -->
                 <a href="https://github.com/yourusername/your-repo" class="custom-btn github-btn" target="_blank">
                     <i class="fab fa-github"></i>
-                    <span>GitHub 项目</span>
+                    <span>GitHub 原作者项目</span>
                 </a>
                 
                 <!-- B站按钮 -->
                 <a href="https://space.bilibili.com/3493142466660408?spm_id_from=333.788.0.0" class="custom-btn bilibili-btn" target="_blank">
                     <i class="fab fa-bilibili"></i>
-                    <span>访问 BiliBili</span>
+                    <span>访问作者 BiliBili</span>
                 </a>
             </div>
         </div>
@@ -718,10 +718,10 @@
             
             if (hasApp) {
                 statusElement.classList.remove('offline');
-                statusText.textContent = 'anyan还活着QAQ';
+                statusText.textContent = 'NF还活着QAQ';
             } else {
                 statusElement.classList.add('offline');
-                statusText.textContent = '死了X-X';
+                statusText.textContent = '死了X_X';
             }
         }
         
@@ -758,14 +758,14 @@
             const statusText = document.getElementById('statusText');
             
             if (navigator.onLine) {
-                // 只有在有应用时才显示"anyan还活着QAQ"
-                if (statusText.textContent !== '死了X-X') {
+                // 只有在有应用时才显示"anyan还活着QAQ" 保留原作者信息吧qwq
+                if (statusText.textContent !== '死了X_X') {
                     statusElement.classList.remove('offline');
-                    statusText.textContent = 'anyan还活着QAQ';
+                    statusText.textContent = 'NF还活着QAQ';
                 }
             } else {
                 statusElement.classList.add('offline');
-                statusText.textContent = '死了X-X';
+                statusText.textContent = '死了X_X';
             }
         }
         
