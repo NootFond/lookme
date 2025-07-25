@@ -1,3 +1,6 @@
+## 注意！！！这不是原作者仓库，这只是我个人修改过的仓库，原作者仓库请访问以下链接
+## https://github.com/anyans/lookme
+
 # 欢迎你能来这里看看我
 ## 该库的灵感来源于[sleepy-project/sleepy: Are you sleeping?](https://github.com/sleepy-project/sleepy)（源码没有任何参考）
 这个项目花了我两个星期QAQ，可以给一个star吗，求求了
