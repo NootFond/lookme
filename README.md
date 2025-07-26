@@ -3,7 +3,7 @@
 
 # 欢迎你能来这里看看我
 ## 该库fork于[看看我QAQ](https://github.com/anyans/lookme)
-## 在线预览[看看我QWQ](https://look me.nootfond.top/)访问可能会比较慢
+## 在线预览[看看我QWQ](https://lookme.nootfond.top/)访问可能会比较慢
 # 我该如何部署这个网页？
 打开Vercel官网后登录您的GitHub账号即可导入
 # 文件树
