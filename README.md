@@ -6,6 +6,7 @@
 这个项目花了我两个星期QAQ，可以给一个star吗，求求了
 ## 在线预览[看看我QAQ](https://lookanyan.dpdns.org/)访问可能会比较慢，请耐心等待    如果可以看看视频的效果
 # 我该如何部署这个网页？
+打开Vercel官网后登录您的GitHub账号即可导入
 # 文件树
 	│  .gitattributes 木的用
 	│  .gitignore 木的用
@@ -25,6 +26,5 @@
 	└─public
 	    index.html 主网页，主要改这个
 	    wallpaper有耳朵抖动.mp4 视频罢了
-# 视频，文字双教程马上就会来！！！
 
 
