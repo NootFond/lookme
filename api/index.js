@@ -5,6 +5,8 @@ const path = require('path');
 
 const app = express();
 
+const ALLOWED_DEVICE_ID = "WINDOWS10";
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -14,7 +16,9 @@ let devices = {};
 app.post('/api/app-usage', (req, res) => {
     const data = req.body;
     console.log('Received data:', data);
-    
+    if (req.body.device_id !== ALLOWED_DEVICE_ID) {
+        return res.status(403).json({ error: 'Device not allowed' });
+    }
     if (!data.device_id) {
         return res.status(400).json({ error: 'Device ID is required' });
     }
